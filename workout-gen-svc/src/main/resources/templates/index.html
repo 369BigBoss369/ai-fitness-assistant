@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>AI Fitness Assistant - Home</title>
+</head>
+<body>
+    <section layout:fragment="content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content text-center">
+                    <h1 class="hero-title">
+                        <i class="fas fa-brain"></i> AI-Powered Workout Generator
+                    </h1>
+                    <p class="hero-subtitle">
+                        Generate personalized exercises, complete workouts, and training plans using advanced artificial intelligence.
+                        Get professional fitness content tailored to your goals and fitness level.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="/exercises" class="btn btn-generate">
+                            <i class="fas fa-play"></i> Start Generating
+                        </a>
+                        <a href="/about" class="btn btn-outline-light">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-5">
+            <div class="container">
+                <h2 class="section-title">What Can You Generate?</h2>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="feature-card h-100 text-center">
+                            <div class="card-icon">
+                                <i class="fas fa-weight-hanging"></i>
+                            </div>
+                            <h5 class="card-title">Custom Exercises</h5>
+                            <p class="card-text">
+                                Generate personalized exercises based on your target muscle groups,
+                                fitness level, and available equipment. Each exercise includes detailed
+                                instructions and proper form guidance.
+                            </p>
+                            <a href="/exercises" class="btn btn-generate w-100">
+                                <i class="fas fa-plus"></i> Generate Exercise
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="feature-card h-100 text-center">
+                            <div class="card-icon">
+                                <i class="fas fa-dumbbell"></i>
+                            </div>
+                            <h5 class="card-title">Complete Workouts</h5>
+                            <p class="card-text">
+                                Create full workout routines with multiple exercises, sets, reps,
+                                and rest periods. Choose from various workout types including strength,
+                                cardio, HIIT, and more.
+                            </p>
+                            <a href="/workouts" class="btn btn-generate w-100">
+                                <i class="fas fa-dumbbell"></i> Generate Workout
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="feature-card h-100 text-center">
+                            <div class="card-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h5 class="card-title">Training Plans</h5>
+                            <p class="card-text">
+                                Build comprehensive training programs with multiple weeks of workouts.
+                                Set your frequency, goals, and experience level to get a customized plan
+                                that evolves with your progress.
+                            </p>
+                            <a href="/plans" class="btn btn-generate w-100">
+                                <i class="fas fa-calendar-plus"></i> Generate Plan
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="py-5" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="process-step h-100">
+                            <div class="step-icon">
+                                <i class="fas fa-user-cog"></i>
+                            </div>
+                            <h5 class="step-title">1. Choose Your Goals</h5>
+                            <p class="mb-0">Select your fitness objectives, experience level, and preferences.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="process-step h-100">
+                            <div class="step-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h5 class="step-title">2. AI Generation</h5>
+                            <p class="mb-0">Advanced AI analyzes your inputs and creates personalized content.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="process-step h-100">
+                            <div class="step-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h5 class="step-title">3. Start Training</h5>
+                            <p class="mb-0">Begin your personalized fitness journey with confidence.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- CTA Section -->
+        <section class="py-5" style="background: linear-gradient(135deg, rgba(240, 147, 251, 0.1) 0%, rgba(245, 87, 108, 0.1) 100%);">
+            <div class="container text-center">
+                <h2 class="section-title">Ready to Transform Your Fitness Journey?</h2>
+                <p class="hero-subtitle mb-4">
+                    Join thousands of users who have discovered personalized training with AI.
+                </p>
+                <div class="d-flex justify-content-center">
+                    <a href="/exercises" class="btn btn-generate">
+                        <i class="fas fa-magic"></i> Generate Your First Workout
+                    </a>
+                </div>
+            </div>
+        </section>
+    </content>
+</body>
+</html>

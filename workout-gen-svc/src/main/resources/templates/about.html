@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>About - AI Fitness Assistant</title>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h1 class="section-title">
+                            <i class="fas fa-info-circle" style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i> About AI Fitness Assistant
+                        </h1>
+                        <p class="hero-subtitle">
+                            Revolutionizing fitness planning with artificial intelligence.
+                        </p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="feature-card h-100 text-center">
+                                <div class="card-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <h5 class="card-title">Powered by AI</h5>
+                                <p class="card-text">
+                                    Utilizing OpenAI's GPT models to create personalized fitness content
+                                    that adapts to your goals, experience level, and available equipment.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="feature-card h-100 text-center">
+                                <div class="card-icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <h5 class="card-title">Built with Spring Boot</h5>
+                                <p class="card-text">
+                                    Robust backend architecture using Spring Boot, JPA, and modern
+                                    Java technologies for reliable and scalable fitness planning.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="feature-card h-100 text-center">
+                                <div class="card-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h5 class="card-title">For Everyone</h5>
+                                <p class="card-text">
+                                    Suitable for beginners to advanced athletes, with content that
+                                    scales to your fitness level and goals.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="feature-card h-100 text-center">
+                                <div class="card-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h5 class="card-title">Safety First</h5>
+                                <p class="card-text">
+                                    All generated content includes proper form guidance, progression
+                                    planning, and recovery recommendations for safe training.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 text-center">
+                        <h3>Ready to Start?</h3>
+                        <p class="lead">Generate your first personalized workout today!</p>
+                        <a href="/exercises" class="btn btn-generate btn-lg">
+                            <i class="fas fa-play"></i> Get Started
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </content>
+</body>
+</html>

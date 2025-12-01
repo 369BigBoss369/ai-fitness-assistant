@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Generate Training Plan - AI Fitness Assistant</title>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center mb-5">
+                        <h1 class="section-title">
+                            <i class="fas fa-calendar-alt" style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i> Generate Training Plan
+                        </h1>
+                        <p class="hero-subtitle">
+                            Create comprehensive multi-week training programs tailored to your goals and schedule.
+                        </p>
+                    </div>
+
+                    <!-- Success/Error Messages -->
+                    <div th:if="${success}" class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> <span th:text="${message}"></span>
+                    </div>
+                    <div th:if="${error}" class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span>
+                    </div>
+
+                    <!-- Plan Result -->
+                    <div th:if="${plan}" class="plan-result">
+                        <div class="result-header">
+                            <div class="result-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <h4 class="result-title" th:text="${plan.name}">Plan Name</h4>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-4">
+                                <div class="p-3" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;">
+                                    <label class="form-label mb-2">Plan Type</label>
+                                    <span th:text="${plan.type}" class="badge" style="background: var(--primary-gradient); color: white;"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;">
+                                    <label class="form-label mb-2">Description</label>
+                                    <span th:text="${plan.description ?: 'Custom training plan'}" style="color: var(--text-secondary);"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;">
+                                    <label class="form-label mb-2">Total Weeks</label>
+                                    <span th:text="${#lists.size(plan.planDays)}" class="badge" style="background: var(--secondary-gradient); color: white;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion" id="planAccordion">
+                            <div th:each="planDay, iterStat : ${plan.planDays}" class="accordion-item" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; margin-bottom: 1rem;">
+                                <h2 class="accordion-header">
+                                    <div class="custom-select-display week-accordion-btn"
+                                         type="button"
+                                         th:data-bs-toggle="collapse"
+                                         th:data-bs-target="'#day' + ${planDay.dayNumber}"
+                                         th:aria-controls="'day' + ${planDay.dayNumber}"
+                                         th:id="'heading' + ${planDay.dayNumber}"
+                                         th:attr="aria-expanded=${iterStat.first ? 'true' : 'false'}"
+                                         th:classappend="${iterStat.first ? '' : 'collapsed'}"
+                                         style="width: 100%; padding: 16px 20px;">
+                                        <div class="custom-select-value">
+                                            <div class="d-flex align-items-center justify-content-between w-100">
+                                                <div>
+                                                    <strong>Week <span th:text="${planDay.dayNumber}"></span></strong>
+                                                </div>
+                                                <div>
+                                                    <span th:text="${planDay.type}" class="badge me-2" style="background: var(--primary-gradient); color: white;"></span>
+                                                    <span th:text="${#lists.size(planDay.workouts) + ' workouts'}" class="badge" style="background: var(--secondary-gradient); color: white;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="custom-select-arrow">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </h2>
+                                <div th:id="'day' + ${planDay.dayNumber}"
+                                     class="accordion-collapse collapse"
+                                     th:classappend="${iterStat.first ? 'show' : ''}"
+                                     th:aria-labelledby="'heading' + ${planDay.dayNumber}">
+                                    <div class="accordion-body" style="background: rgba(0, 0, 0, 0.2); border-top: 1px solid var(--glass-border);">
+                                        <div th:if="${#lists.isEmpty(planDay.workouts)}">
+                                            <p style="color: var(--text-secondary); margin: 0;">Rest or recovery day</p>
+                                        </div>
+                                        <div th:if="${!#lists.isEmpty(planDay.workouts)}">
+                                            <p style="color: var(--text-primary); font-weight: 600; margin-bottom: 1rem;">Workouts for this week:</p>
+                                            <div th:each="workout, workoutIter : ${planDay.workouts}" class="mb-3">
+                                                <div class="workout-card" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1rem;">
+                                                    <div class="workout-header d-flex justify-content-between align-items-center mb-3">
+                                                        <div>
+                                                            <h6 class="mb-1" style="color: var(--text-primary); font-weight: 600;">
+                                                                <i class="fas fa-dumbbell me-2" style="color: var(--accent);"></i>
+                                                                <span th:text="${workout.name}"></span>
+                                                            </h6>
+                                                            <span th:text="${workout.type}" class="badge" style="background: var(--primary-gradient); color: white; font-size: 0.75rem;"></span>
+                                                        </div>
+                                                        <div class="custom-select-display workout-toggle-btn"
+                                                             th:data-bs-toggle="collapse"
+                                                             th:data-bs-target="'#workout' + ${planDay.dayNumber} + 'exercise' + ${workoutIter.index}"
+                                                             th:aria-expanded="${workoutIter.first ? 'true' : 'false'}"
+                                                             th:aria-controls="'workout' + ${planDay.dayNumber} + 'exercise' + ${workoutIter.index}"
+                                                             style="padding: 8px 12px; font-size: 0.875rem; cursor: pointer;">
+                                                            <div class="custom-select-value">
+                                                                <span th:text="${#lists.size(workout.exercises)} + ' exercises'"></span>
+                                                            </div>
+                                                            <div class="custom-select-arrow">
+                                                                <i class="fas fa-chevron-down"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div th:id="'workout' + ${planDay.dayNumber} + 'exercise' + ${workoutIter.index}"
+                                                         class="collapse"
+                                                         th:classappend="${workoutIter.first ? 'show' : ''}">
+                                                        <div class="workout-exercises">
+                                                            <div th:each="exercise, exerciseIter : ${workout.exercises}" class="exercise-item d-flex align-items-center justify-content-between py-2 px-3 mb-2"
+                                                                 style="background: rgba(0, 0, 0, 0.2); border-radius: 8px; border-left: 3px solid var(--accent);">
+                                                                <div class="exercise-info flex-grow-1">
+                                                                    <div class="d-flex align-items-center mb-1">
+                                                                        <span class="exercise-number badge me-2" style="background: var(--secondary-gradient); color: white; min-width: 24px;">#<span th:text="${exercise.number}"></span></span>
+                                                                        <strong th:text="${exercise.exerciseName}" style="color: var(--text-primary);"></strong>
+                                                                    </div>
+                                                                    <div class="exercise-details text-sm" style="color: var(--text-secondary);">
+                                                                        <span th:if="${exercise.reps != null and exercise.reps > 0}" th:text="${exercise.reps + ' reps'}" class="me-2"></span>
+                                                                        <span th:if="${exercise.weight != null and exercise.weight > 0}" th:text="${exercise.weight + ' kg'}" class="me-2"></span>
+                                                                        <span th:if="${exercise.duration != null and exercise.duration > 0}" th:text="${exercise.duration + ' sec'}" class="me-2"></span>
+                                                                        <span th:if="${exercise.burnedCalories != null and exercise.burnedCalories > 0}" th:text="${exercise.burnedCalories + ' cal'}" style="color: var(--accent); font-weight: 500;"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generation Form -->
+                    <div class="form-container">
+                        <div class="text-center mb-4">
+                            <h3 style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                <i class="fas fa-sliders-h"></i> Plan Preferences
+                            </h3>
+                        </div>
+                        <form th:action="@{/plans/generate}" method="post">
+                            <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label for="duration" class="form-label">
+                                            <i class="fas fa-calendar-week"></i> Plan Duration (weeks)
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="duration" name="duration" required>
+                                                <option value="">Choose duration...</option>
+                                                <option th:each="dur : ${durations}"
+                                                        th:value="${dur}"
+                                                        th:text="${dur + ' weeks'}"
+                                                        th:selected="${selectedDuration == dur}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="frequency" class="form-label">
+                                            <i class="fas fa-calendar-day"></i> Training Frequency (days/week)
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="frequency" name="frequency" required>
+                                                <option value="">Choose frequency...</option>
+                                                <option th:each="freq : ${frequencies}"
+                                                        th:value="${freq}"
+                                                        th:text="${freq + ' days per week'}"
+                                                        th:selected="${selectedFrequency == freq}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="experience" class="form-label">
+                                            <i class="fas fa-user-graduate"></i> Experience Level
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="experience" name="experience" required>
+                                                <option value="">Choose experience level...</option>
+                                                <option th:each="exp : ${experiences}"
+                                                        th:value="${exp}"
+                                                        th:text="${exp}"
+                                                        th:selected="${selectedExperience == exp}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="goals" class="form-label">
+                                            <i class="fas fa-bullseye"></i> Primary Goal
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="goals" name="goals" required>
+                                                <option value="">Choose your goal...</option>
+                                                <option th:each="goal : ${goals}"
+                                                        th:value="${goal}"
+                                                        th:text="${goal}"
+                                                        th:selected="${selectedGoals == goal}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-generate btn-lg">
+                                            <i class="fas fa-magic"></i> Generate Training Plan
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Tips Section -->
+                    <div class="mt-4">
+                        <div class="alert" style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); color: var(--text-primary);">
+                            <h6><i class="fas fa-lightbulb"></i> Tips for Better Training Plans:</h6>
+                            <ul class="mb-0">
+                                <li>Start with shorter plans (4-6 weeks) if you're new to structured training</li>
+                                <li>Choose realistic training frequency based on your schedule and recovery needs</li>
+                                <li>The AI automatically includes progression and deload weeks for optimal results</li>
+                                <li>Plans adapt to your experience level with appropriate exercise complexity</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </content>
+</body>
+</html>

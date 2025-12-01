@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Generate Workout - AI Fitness Assistant</title>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center mb-5">
+                        <h1 class="section-title">
+                            <i class="fas fa-dumbbell" style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i> Generate Complete Workout
+                        </h1>
+                        <p class="hero-subtitle">
+                            Create full workout routines with multiple exercises, sets, reps, and timing.
+                        </p>
+                    </div>
+
+                    <!-- Success/Error Messages -->
+                    <div th:if="${success}" class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> <span th:text="${message}"></span>
+                    </div>
+                    <div th:if="${error}" class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span>
+                    </div>
+
+                    <!-- Workout Result -->
+                    <div th:if="${workout}" class="workout-result">
+                        <div class="result-header">
+                            <div class="result-icon">
+                                <i class="fas fa-list-check"></i>
+                            </div>
+                            <h4 class="result-title" th:text="${workout.name}">Workout Name</h4>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="p-3" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;">
+                                    <label class="form-label mb-2">Workout Type</label>
+                                    <span th:text="${workout.type}" class="badge" style="background: var(--primary-gradient); color: white;"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;">
+                                    <label class="form-label mb-2">Total Exercises</label>
+                                    <span th:text="${#lists.size(workout.exercises)}" class="badge" style="background: var(--secondary-gradient); color: white;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="border-color: var(--glass-border); color: var(--text-secondary); font-weight: 600;">#</th>
+                                        <th style="border-color: var(--glass-border); color: var(--text-secondary); font-weight: 600;">Exercise</th>
+                                        <th style="border-color: var(--glass-border); color: var(--text-secondary); font-weight: 600;">Reps</th>
+                                        <th style="border-color: var(--glass-border); color: var(--text-secondary); font-weight: 600;">Weight</th>
+                                        <th style="border-color: var(--glass-border); color: var(--text-secondary); font-weight: 600;">Duration</th>
+                                        <th style="border-color: var(--glass-border); color: var(--text-secondary); font-weight: 600;">Calories</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="exercise : ${workout.exercises}">
+                                        <td th:text="${exercise.number}"></td>
+                                        <td>
+                                            <strong th:text="${exercise.exerciseName}"></strong>
+                                        </td>
+                                        <td th:text="${exercise.reps ?: 'N/A'}"></td>
+                                        <td th:text="${exercise.weight != null and exercise.weight > 0 ? (exercise.weight + ' kg') : 'Bodyweight'}"></td>
+                                        <td th:text="${exercise.duration != null and exercise.duration > 0 ? (exercise.duration + ' sec') : 'N/A'}"></td>
+                                        <td th:text="${exercise.burnedCalories ?: 'N/A'}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Generation Form -->
+                    <div class="form-container">
+                        <div class="text-center mb-4">
+                            <h3 style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                <i class="fas fa-sliders-h"></i> Workout Preferences
+                            </h3>
+                        </div>
+                        <form th:action="@{/workouts/generate}" method="post">
+                            <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label for="type" class="form-label">
+                                            <i class="fas fa-dumbbell"></i> Workout Type
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="type" name="type" required>
+                                                <option value="">Choose workout type...</option>
+                                                <option th:each="workoutType : ${workoutTypes}"
+                                                        th:value="${workoutType}"
+                                                        th:text="${workoutType}"
+                                                        th:selected="${selectedType == workoutType}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="duration" class="form-label">
+                                            <i class="fas fa-clock"></i> Duration (minutes)
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="duration" name="duration" required>
+                                                <option value="">Choose duration...</option>
+                                                <option th:each="dur : ${durations}"
+                                                        th:value="${dur}"
+                                                        th:text="${dur + ' minutes'}"
+                                                        th:selected="${selectedDuration == dur}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="fitnessLevel" class="form-label">
+                                            <i class="fas fa-chart-line"></i> Fitness Level
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="fitnessLevel" name="fitnessLevel" required>
+                                                <option value="">Choose fitness level...</option>
+                                                <option th:each="level : ${fitnessLevels}"
+                                                        th:value="${level}"
+                                                        th:text="${level}"
+                                                        th:selected="${selectedFitnessLevel == level}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="goals" class="form-label">
+                                            <i class="fas fa-bullseye"></i> Primary Goal
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="goals" name="goals" required>
+                                                <option value="">Choose your goal...</option>
+                                                <option th:each="goal : ${goals}"
+                                                        th:value="${goal}"
+                                                        th:text="${goal}"
+                                                        th:selected="${selectedGoals == goal}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-generate btn-lg">
+                                            <i class="fas fa-magic"></i> Generate Workout
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Tips Section -->
+                    <div class="mt-4">
+                        <div class="alert" style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); color: var(--text-primary);">
+                            <h6><i class="fas fa-lightbulb"></i> Tips for Better Workouts:</h6>
+                            <ul class="mb-0">
+                                <li>Choose workout types that match your available equipment and space</li>
+                                <li>Select durations that fit your schedule (start with shorter sessions if you're new)</li>
+                                <li>The AI considers your fitness level to suggest appropriate exercise progressions</li>
+                                <li>Generated workouts include proper warm-up and cool-down recommendations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </content>
+</body>
+</html>

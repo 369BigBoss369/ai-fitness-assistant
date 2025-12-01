@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <title>Generate Exercise - AI Fitness Assistant</title>
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h1 class="section-title">
+                            <i class="fas fa-weight-hanging" style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i> Generate Custom Exercise
+                        </h1>
+                        <p class="hero-subtitle">
+                            Create personalized exercises tailored to your target muscles, fitness level, and available equipment.
+                        </p>
+                    </div>
+
+                    <!-- Success/Error Messages -->
+                    <div th:if="${success}" class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> <span th:text="${message}"></span>
+                    </div>
+                    <div th:if="${error}" class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span>
+                    </div>
+
+                    <!-- Exercise Result -->
+                    <div th:if="${exercise}" class="exercise-result">
+                        <div class="result-header">
+                            <div class="result-icon">
+                                <i class="fas fa-dumbbell"></i>
+                            </div>
+                            <h4 class="result-title" th:text="${exercise.name}">Exercise Name</h4>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Exercise Type</label>
+                                    <span th:text="${exercise.type}" class="badge" style="background: var(--primary-gradient); color: white;"></span>
+                                </div>
+                                <div>
+                                    <label class="form-label">Muscle Targets</label>
+                                    <div>
+                                        <span th:each="target : ${exercise.muscleTargets}"
+                                              th:text="${target.muscle + ' (' + target.intensity + ')'}"
+                                              class="muscle-target"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div th:if="${exercise.imageUrl}" class="mb-3">
+                                    <label class="form-label">Exercise Image</label>
+                                    <a th:href="${exercise.imageUrl}" target="_blank" class="btn btn-generate w-100">
+                                        <i class="fas fa-external-link-alt"></i> View Exercise Image
+                                    </a>
+                                </div>
+                                <div th:if="${exercise.videoUrl}">
+                                    <p><strong>Video:</strong></p>
+                                    <a th:href="${exercise.videoUrl}" target="_blank" class="btn btn-sm btn-outline-danger">
+                                        <i class="fab fa-youtube"></i> Watch Video
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generation Form -->
+                    <div class="form-container">
+                        <div class="text-center mb-4">
+                            <h3 style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                <i class="fas fa-sliders-h"></i> Exercise Preferences
+                            </h3>
+                        </div>
+                        <form th:action="@{/exercises/generate}" method="post">
+                            <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label for="muscleGroup" class="form-label">
+                                            <i class="fas fa-bullseye"></i> Target Muscle Group
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="muscleGroup" name="muscleGroup" required>
+                                                <option value="">Choose muscle group...</option>
+                                                <option th:each="group : ${muscleGroups}"
+                                                        th:value="${group}"
+                                                        th:text="${group}"
+                                                        th:selected="${selectedMuscleGroup == group}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="difficulty" class="form-label">
+                                            <i class="fas fa-chart-line"></i> Difficulty Level
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="difficulty" name="difficulty" required>
+                                                <option value="">Choose difficulty...</option>
+                                                <option th:each="level : ${difficulties}"
+                                                        th:value="${level}"
+                                                        th:text="${level}"
+                                                        th:selected="${selectedDifficulty == level}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="equipment" class="form-label">
+                                            <i class="fas fa-tools"></i> Available Equipment
+                                        </label>
+                                        <div class="form-select-wrapper">
+                                            <select class="form-select" id="equipment" name="equipment" required>
+                                                <option value="">Choose equipment...</option>
+                                                <option th:each="item : ${equipment}"
+                                                        th:value="${item}"
+                                                        th:text="${item}"
+                                                        th:selected="${selectedEquipment == item}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-generate">
+                                        <i class="fas fa-magic"></i> Generate Exercise
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Tips Section -->
+                    <div class="mt-4">
+                        <div class="alert" style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); color: var(--text-primary);">
+                            <h6><i class="fas fa-lightbulb"></i> Tips for Better Results:</h6>
+                            <ul class="mb-0">
+                                <li>Be specific about your target muscle group for more accurate exercises</li>
+                                <li>Choose equipment that matches what you actually have available</li>
+                                <li>The AI considers your fitness level to suggest appropriate exercises</li>
+                                <li>Each generated exercise includes proper form guidance and variations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </content>
+</body>
+</html>
